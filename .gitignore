@@ -3,3 +3,8 @@ venv
 planning.txt
 issues.md
 __pycache__
+*.pdf
+*.bib
+data/raw/
+data/clean/
+data/references/
