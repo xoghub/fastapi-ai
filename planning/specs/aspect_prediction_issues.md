@@ -5,7 +5,6 @@
 - **Features**:
   - Preprocess and label training data for multi-label aspect classification.
   - Train a multi-label classification model (e.g., using Support Vector Machines).
-  - Integrate the new model into the `AnalysisService` so that both aspects and sentiments are predicted via ML.
 
 ## 2. Machine Learning Details
 - **Model Architecture**:
@@ -25,8 +24,3 @@
   - Perform GridSearchCV for hyperparameter tuning.
 - **Evaluation Result**: (To be filled after training and evaluation)
 - **Save Model Location**: `artifacts/model/svm_aspect_pipeline_YYYY-MM-DD.pkl`
-
-## 3. Integration Plan
-- Update `app-server/src/analysis/service.py` to lazy-load the new aspect prediction model alongside the sentiment model (or load a single joint model if combined).
-- Replace the keyword-matching heuristic in `analyze_review` with a call to the aspect model's `predict()` method.
-- Return the predicted aspects and their corresponding sentiments.

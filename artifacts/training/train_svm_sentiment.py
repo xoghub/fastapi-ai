@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, f1_score
 
 def train_model(input_path, model_path):
     print(f"Loading cleaned data from {input_path}...")
@@ -50,16 +50,31 @@ def train_model(input_path, model_path):
     print("Evaluating model...")
     y_pred = best_model.predict(X_test)
     
-    print("\nClassification Report:")
+    acc = accuracy_score(y_test, y_pred)
+    weighted_f1 = f1_score(y_test, y_pred, average='weighted')
+    macro_f1 = f1_score(y_test, y_pred, average='macro')
+    
     report = classification_report(y_test, y_pred)
-    print(report)
+    
+    evaluation_text = (
+        f"Model: {os.path.basename(model_path)}\n"
+        f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+        f"{'='*30}\n"
+        f"Accuracy: {acc:.4f}\n"
+        f"Weighted F1: {weighted_f1:.4f}\n"
+        f"Macro F1: {macro_f1:.4f}\n"
+        f"{'='*30}\n"
+        f"Classification Report:\n{report}"
+    )
+    
+    print("\n" + evaluation_text)
 
     # Save evaluation results
-    eval_dir = os.path.join("artifacts", "evaluation")
+    eval_dir = os.path.join("artifacts", "evaluation", "sentiment")
     os.makedirs(eval_dir, exist_ok=True)
     
-    with open(os.path.join(eval_dir, "classification_report.txt"), "w") as f:
-        f.write(report)
+    with open(os.path.join(eval_dir, "sentiment_classification_report.txt"), "w") as f:
+        f.write(evaluation_text)
     
     # Save model
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
