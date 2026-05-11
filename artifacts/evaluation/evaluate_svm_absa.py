@@ -41,7 +41,7 @@ def evaluate_model(model_path, data_path, output_dir):
 if __name__ == "__main__":
     model_dir = os.path.join("artifacts", "model")
     clean_dir = os.path.join("data", "clean")
-    eval_dir = os.path.join("artifacts", "evaluation")
+    eval_dir = os.path.join("artifacts", "evaluation", "assets")
     
     # Find latest model and data
     models = [f for f in os.listdir(model_dir) if f.endswith(".pkl")]
