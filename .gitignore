@@ -9,3 +9,4 @@ data/raw/
 data/clean/
 data/references/
 assets/
+*.db
