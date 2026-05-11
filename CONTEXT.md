@@ -48,6 +48,7 @@ We want create planning issues.md for software project. The software project is 
 | Create planning | /planning | CONTEXT.md | — |
 | Create planning feature | /planning | CONTEXT.md | — |
 | Create planning project | /planning | CONTEXT.md | — |
+| Execute planning project | /planning | CONTEXT.md | — |
 | Write code | /app-server or /app-interface | CONTEXT.md | — |
 | Create training code | /artifacts/training | CONTEXT.md | — |
 | Create preprocessing code | /artifacts/preprocessing | CONTEXT.md | — |
