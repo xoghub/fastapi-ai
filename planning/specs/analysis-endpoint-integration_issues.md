@@ -34,3 +34,38 @@
    - Start the FastAPI server.
    - Send a request to `POST /api/analyze`.
    - Verify that real ML predictions are returned.
+
+## 4. API Endpoint Definition
+
+### `POST /api/analyze`
+**Description**: Analyzes a product review to extract the aspect and sentiment using two separate pre-trained ML models.
+
+#### Request Headers
+- `Content-Type`: `application/json`
+
+#### Request Body
+```json
+{
+  "review_text": "suara speakernya jernih dan bassnya kerasa banget"
+}
+```
+
+#### Good Response (200 OK)
+```json
+{
+  "review_text": "suara speakernya jernih dan bassnya kerasa banget",
+  "analysis": [
+    {
+      "aspect": "suara",      // Outcome from new multiclassification model (svm_aspect_pipeline_2026-05-11.pkl)
+      "sentiment": "Positive" // Outcome from old sentiment model (svm_absa_pipeline_2026-05-08.pkl)
+    }
+  ]
+}
+```
+
+#### Error Response (500 Internal Server Error)
+```json
+{
+  "detail": "Failed to load ML models or perform inference."
+}
+```
