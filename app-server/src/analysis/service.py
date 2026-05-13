@@ -9,17 +9,30 @@ logger = logging.getLogger(__name__)
 
 class AnalysisService:
     def __init__(self):
-        self._model = None
-        # Path to model relative to project root
-        self._model_path = os.path.normpath(
+        self._sentiment_model = None
+        self._aspect_model = None
+        # Paths to models relative to project root
+        base_dir = os.path.dirname(__file__)
+        self._sentiment_model_path = os.path.normpath(
             os.path.join(
-                os.path.dirname(__file__),
+                base_dir,
                 "..",
                 "..",
                 "..",
                 "artifacts",
                 "model",
                 "svm_absa_pipeline_2026-05-08.pkl",
+            )
+        )
+        self._aspect_model_path = os.path.normpath(
+            os.path.join(
+                base_dir,
+                "..",
+                "..",
+                "..",
+                "artifacts",
+                "model",
+                "svm_aspect_pipeline_2026-05-11.pkl",
             )
         )
 
@@ -40,55 +53,68 @@ class AnalysisService:
             "bass": ["bass", "ngebass", "ngebasss"],
         }
 
-    async def _get_model(self):
-        """Lazily load the model in a threadpool to avoid blocking the event loop."""
-        if self._model is None:
-            if not os.path.exists(self._model_path):
-                logger.error(f"Model file not found at {self._model_path}")
-                return None
+    async def _load_models_if_needed(self):
+        """Lazily load both models in a threadpool to avoid blocking the event loop."""
+        if self._sentiment_model is None:
+            if not os.path.exists(self._sentiment_model_path):
+                logger.error(f"Sentiment model file not found at {self._sentiment_model_path}")
+            else:
+                try:
+                    logger.info(f"Loading sentiment model from {self._sentiment_model_path}...")
+                    self._sentiment_model = await run_in_threadpool(joblib.load, self._sentiment_model_path)
+                    logger.info("Sentiment model loaded successfully.")
+                except Exception as e:
+                    logger.error(f"Failed to load sentiment model: {str(e)}")
 
-            try:
-                logger.info(f"Loading ML model from {self._model_path}...")
-                self._model = await run_in_threadpool(joblib.load, self._model_path)
-                logger.info("Model loaded successfully.")
-            except Exception as e:
-                logger.error(f"Failed to load model: {str(e)}")
-                return None
-        return self._model
+        if self._aspect_model is None:
+            if not os.path.exists(self._aspect_model_path):
+                logger.error(f"Aspect model file not found at {self._aspect_model_path}")
+            else:
+                try:
+                    logger.info(f"Loading aspect model from {self._aspect_model_path}...")
+                    self._aspect_model = await run_in_threadpool(joblib.load, self._aspect_model_path)
+                    logger.info("Aspect model loaded successfully.")
+                except Exception as e:
+                    logger.error(f"Failed to load aspect model: {str(e)}")
 
     async def analyze_review(self, review_text: str) -> List[AnalysisResult]:
         logger.info(f"Analyzing review: {review_text[:50]}...")
 
-        model = await self._get_model()
+        await self._load_models_if_needed()
 
-        # Identify aspects based on keywords
-        text_lower = review_text.lower()
-        found_aspects = []
-        for aspect, keywords in self._aspect_keywords.items():
-            if any(kw in text_lower for kw in keywords):
-                found_aspects.append(aspect)
-
-        # Default to "product" if no specific aspect found
-        if not found_aspects:
-            found_aspects.append("product")
-
-        # Predict sentiment using the model in a threadpool (CPU intensive)
-        sentiment = "Neutral"
-        if model:
+        # Predict aspect using the new multiclassification model
+        predicted_aspect = None
+        if self._aspect_model:
             try:
-                # model.predict expects a sequence of texts
-                predictions = await run_in_threadpool(model.predict, [review_text])
-                print(predictions)
-                # predictions[0] is likely 'positive', 'negative', or 'neutral'
+                predictions = await run_in_threadpool(self._aspect_model.predict, [review_text])
+                if predictions is not None and len(predictions) > 0:
+                    predicted_aspect = str(predictions[0])
+            except Exception as e:
+                logger.error(f"Aspect inference failed: {str(e)}")
+        
+        # print("predicted_aspect", predicted_aspect)
+
+        # Fallback to keywords if aspect model prediction fails
+        if not predicted_aspect:
+            text_lower = review_text.lower()
+            for aspect, keywords in self._aspect_keywords.items():
+                if any(kw in text_lower for kw in keywords):
+                    predicted_aspect = aspect
+                    break
+            if not predicted_aspect:
+                predicted_aspect = "product"
+
+        # Predict sentiment using the old sentiment model
+        sentiment = "Neutral"
+        if self._sentiment_model:
+            try:
+                predictions = await run_in_threadpool(self._sentiment_model.predict, [review_text])
                 sentiment = str(predictions[0]).capitalize()
             except Exception as e:
-                logger.error(f"Inference failed: {str(e)}")
-
-        # Map results to AnalysisResult objects
-        return [
-            AnalysisResult(aspect=aspect, sentiment=sentiment)
-            for aspect in found_aspects
-        ]
+                logger.error(f"Sentiment inference failed: {str(e)}")
+        # print("sentiment", sentiment)
+        # Map result to AnalysisResult object
+        return [AnalysisResult(aspect=predicted_aspect, sentiment=sentiment)]
 
 
 analysis_service = AnalysisService()

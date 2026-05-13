@@ -30,7 +30,7 @@
    - Update `analyze_review` to call `_load_models_if_needed()` and pass the `review_text` through both `_aspect_model.predict()` and `_sentiment_model.predict()`.
    - Parse the pipelines' outputs to combine them into the final response.
 4. **Error Handling**: Use `try-except` blocks. If model loading or prediction fails, raise a relevant error or log it and return a default/fallback response. (DONE)
-5. **Testing**: (IN PROGRESS)
+5. **Testing**: (DONE)
    - Start the FastAPI server.
    - Send a request to `POST /api/analyze`.
    - Verify that real ML predictions are returned.

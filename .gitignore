@@ -1,6 +1,7 @@
 venv
 .env
 planning.txt
+TODO.txt
 issues.md
 __pycache__
 *.pdf
