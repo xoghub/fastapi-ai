@@ -27,3 +27,4 @@ Example:
 | Create preprocessing code for [data_raw] and produce [data_clean] | ./preprocessing | CONTEXT.md |
 | Create evaluation code for [model] with [data_clean] and produce evaluation result | ./evaluation | CONTEXT.md |
 | Save best model for [model] that pass evaluation with [data_clean] and save in ./model/ with [model_name_YYYY-MM-DD.pkl] naming convention | ./model | CONTEXT.md |
+| Save result of evaluation artifacts like confusion matrix, roc curve, etc. save in ./artifacts/evaluation/assets/ with [assets_YYYY-MM-DD.png] naming convention | ./artifacts/evaluation/assets/ | CONTEXT.md |

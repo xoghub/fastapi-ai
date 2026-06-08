@@ -1,6 +1,7 @@
 venv
 .env
 planning.txt
+TODO.txt
 issues.md
 __pycache__
 *.pdf
@@ -8,5 +9,5 @@ __pycache__
 data/raw/
 data/clean/
 data/references/
-assets/
 *.db
+artifacts/evaluation/assets/
