@@ -1,0 +1,21 @@
+:root {
+  --color-bg-1: #f3f4f6;       // Lighter gray for page background
+  --color-bg-2: #ffffff;       // White for cards
+  --border-color-1: #e5e7eb;   // Light gray border
+  --border-color-2: #d1d5db;   // Medium gray border
+  --border-hover: #9ca3af;     // Hover state border
+  --color-hover: #f9fafb;      // Hover state background
+  --color-active: #f3f4f6;     // Active background
+  --color-skeleton: #e5e7eb;   // Base color for skeleton loading
+  --border-radius: 8px;        // Standard border radius
+  
+  // Ionic brand semantic variables
+  --ion-color-primary: #3b82f6;   // Brand primary (blue)
+  --ion-color-success: #10b981;   // Positive sentiment (green)
+  --ion-color-warning: #f59e0b;   // Neutral sentiment (orange/yellow)
+  --ion-color-danger: #ef4444;    // Negative sentiment (red)
+  --ion-color-medium: #6b7280;    // Secondary/muted text
+  --ion-text-color: #111827;      // Primary text
+  --ion-color-text-1: #374151;    // Dark gray text
+  --ion-border-color: #e5e7eb;
+}

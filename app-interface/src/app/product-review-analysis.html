@@ -1,0 +1,173 @@
+<div fx-column-start-stretch fx-gap-24 style="min-height: 100vh; padding: 24px; box-sizing: border-box;">
+  <!-- Header -->
+  <header fx-row-between-center fx-gap-16 bb-1-soft style="padding-bottom: 16px;">
+    <div fx-row-start-center fx-gap-8>
+      <div style="width: 12px; height: 12px; border-radius: 50%; background-color: var(--ion-color-primary);"></div>
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px;">FAST-AI ABSA</h1>
+    </div>
+    
+    <!-- Server Status Indicator -->
+    <div fx-row-start-center fx-gap-8 style="padding: 6px 12px; background-color: var(--color-bg-2); font-size: 13px;" ba-1 rounded-sm>
+      <span style="font-weight: 500;">Status Server:</span>
+      @if (apiService.serverOffline()) {
+        <span fx-row-start-center fx-gap-4 style="color: var(--ion-color-danger); font-weight: 600;">
+          <span class="status-dot offline"></span> Offline
+        </span>
+      } @else {
+        <span fx-row-start-center fx-gap-4 style="color: var(--ion-color-success); font-weight: 600;">
+          <span class="status-dot online"></span> Online
+        </span>
+      }
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main fx-row-start-stretch fx-column-start-stretch fx-row-sm-start-stretch fx-gap-24 fx-flex>
+    <!-- Left Column: Input Panel -->
+    <section fx-12 fx-sm-5 fx-column-start-stretch fx-gap-16>
+      <div fx-column-start-stretch fx-gap-16 style="padding: 24px; background-color: var(--color-bg-2);" ba-1 rounded-sm>
+        <div fx-column-start-stretch fx-gap-4>
+          <h2 style="margin: 0; font-size: 18px; font-weight: 600;">Analisis Review</h2>
+          <p style="margin: 0; font-size: 14px; color: var(--ion-color-medium);">Masukkan ulasan pembeli dari marketplace untuk mendeteksi aspek dan sentimen secara otomatis.</p>
+        </div>
+
+        <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" fx-column-start-stretch fx-gap-16>
+          <div fx-column-start-stretch fx-gap-6>
+            <label style="font-size: 13px; font-weight: 600; color: var(--ion-color-text-1);">Teks Ulasan</label>
+            <textarea 
+              formControlName="reviewText"
+              rows="6" 
+              placeholder="Contoh: Suara speakernya jernih dan bassnya kerasa banget, tapi pengirimannya agak lambat..."
+              style="padding: 12px; font-size: 14px; border: 1px solid var(--border-color-2); outline: none; transition: border-color 0.2s;"
+              rounded-sm
+              class="textarea-input"
+            ></textarea>
+            
+            <div fx-row-between-center style="font-size: 12px; color: var(--ion-color-medium);">
+              <span>Minimal 10 karakter</span>
+              <span>{{ reviewTextControl?.value?.length || 0 }}/500</span>
+            </div>
+
+            @if (reviewTextControl?.touched && reviewTextControl?.errors?.['minlength']) {
+              <div style="color: var(--ion-color-danger); font-size: 12px; font-weight: 500;">
+                Teks ulasan terlalu pendek. Masukkan minimal 10 karakter.
+              </div>
+            }
+          </div>
+
+          <div fx-row-start-center fx-gap-12>
+            <button 
+              type="submit" 
+              [disabled]="reviewForm.invalid || apiService.loading()"
+              style="padding: 12px 24px; background-color: var(--ion-color-primary); color: white; border: none; font-weight: 600; cursor: pointer; transition: opacity 0.2s;"
+              rounded-sm
+              class="btn-primary"
+            >
+              @if (apiService.loading()) {
+                Memproses...
+              } @else {
+                Analisis Aspek & Sentimen
+              }
+            </button>
+            <button 
+              type="button" 
+              (click)="onClear()"
+              style="padding: 12px 16px; background-color: transparent; border: 1px solid var(--border-color-2); cursor: pointer; font-weight: 500;"
+              rounded-sm
+              class="btn-secondary"
+            >
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Right Column: Results Panel -->
+    <section fx-12 fx-sm-7 fx-column-start-stretch>
+      <div fx-column-start-stretch fx-flex style="padding: 24px; background-color: var(--color-bg-2); min-height: 300px;" ba-1 rounded-sm>
+        
+        <!-- Case 1: Loading State -->
+        @if (apiService.loading()) {
+          <div fx-column-start-stretch fx-gap-16>
+            <div class="skeleton skeleton-title" style="height: 24px; width: 40%;"></div>
+            <div fx-column-start-stretch fx-gap-12>
+              <div class="skeleton skeleton-card" style="height: 60px;"></div>
+              <div class="skeleton skeleton-card" style="height: 60px;"></div>
+            </div>
+          </div>
+        }
+
+        <!-- Case 2: Server Disconnected/Offline State -->
+        @else if (apiService.serverOffline()) {
+          <div fx-column-start-stretch fx-gap-16 fx-flex fx-column-center-center style="text-align: center;">
+            <div class="skeleton skeleton-card" style="height: 80px; width: 100%;" fx-row-center-center>
+              <div fx-column-start-center fx-gap-8 style="padding: 16px; color: var(--ion-color-danger); width: 100%; border: 1px dashed var(--ion-color-danger); border-radius: var(--border-radius); background-color: rgba(239, 68, 68, 0.05);">
+                <strong style="font-size: 15px;">Koneksi Server Terputus</strong>
+                <span style="font-size: 13px;">Server sedang offline atau tidak dapat dijangkau. Harap nyalakan server FastAPI backend Anda.</span>
+              </div>
+            </div>
+            <div class="skeleton skeleton-title" style="height: 16px; width: 60%; margin-top: 16px;"></div>
+            <div class="skeleton skeleton-title" style="height: 16px; width: 40%;"></div>
+          </div>
+        }
+
+        <!-- Case 3: Initial Empty State -->
+        @else if (!apiService.currentReviewText() && apiService.results().length === 0) {
+          <div fx-column-center-center fx-flex fx-gap-12 style="color: var(--ion-color-medium); text-align: center; padding: 40px 0;">
+            <div style="font-size: 48px;">📊</div>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: var(--ion-text-color);">Belum Ada Data Analisis</h3>
+            <p style="margin: 0; font-size: 13px; max-width: 300px;">Ketik ulasan di panel kiri dan klik tombol untuk melihat ekstraksi aspek dan sentimen.</p>
+          </div>
+        }
+
+        <!-- Case 4: Results Display State -->
+        @else {
+          <div fx-column-start-stretch fx-gap-20>
+            <div fx-column-start-stretch fx-gap-6>
+              <span style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--ion-color-medium); letter-spacing: 0.5px;">Ulasan yang dianalisis:</span>
+              <p style="margin: 0; font-style: italic; font-size: 14px; padding: 12px; background-color: var(--color-bg-1);" rounded-sm>
+                "{{ apiService.currentReviewText() }}"
+              </p>
+            </div>
+
+            <div fx-column-start-stretch fx-gap-12>
+              <h3 style="margin: 0; font-size: 15px; font-weight: 600; border-bottom: 1px solid var(--border-color-1); padding-bottom: 8px;">Hasil Analisis Aspek (ABSA)</h3>
+              
+              @if (apiService.results().length === 0) {
+                <div style="padding: 16px; background-color: var(--color-bg-1); text-align: center; font-size: 13px; color: var(--ion-color-medium);" rounded-sm>
+                  Tidak ada aspek spesifik yang terdeteksi dalam ulasan ini.
+                </div>
+              } @else {
+                <div fx-column-start-stretch fx-gap-8>
+                  @for (item of apiService.results(); track $index) {
+                    <div fx-row-between-center style="padding: 16px; background-color: var(--color-bg-1);" rounded-sm class="result-card">
+                      <div fx-row-start-center fx-gap-8>
+                        <span style="font-size: 18px;">🏷️</span>
+                        <div fx-column-start-stretch>
+                          <span style="font-weight: 600; font-size: 14px; text-transform: capitalize;">{{ item.aspect }}</span>
+                          <span style="font-size: 11px; color: var(--ion-color-medium);">Aspek Produk</span>
+                        </div>
+                      </div>
+                      
+                      <!-- Sentiment Badges -->
+                      <span 
+                        class="sentiment-badge" 
+                        [class.positive]="item.sentiment.toLowerCase() === 'positive'"
+                        [class.neutral]="item.sentiment.toLowerCase() === 'neutral'"
+                        [class.negative]="item.sentiment.toLowerCase() === 'negative'"
+                      >
+                        {{ item.sentiment }}
+                      </span>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+      </div>
+    </section>
+  </main>
+</div>

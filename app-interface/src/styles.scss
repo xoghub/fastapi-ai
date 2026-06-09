@@ -1,1 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'styles/colors';
+@import 'styles/flex';
+@import 'styles/border';
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--color-bg-1);
+  color: var(--ion-text-color);
+}

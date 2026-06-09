@@ -1,0 +1,116 @@
+/* Flex Layout System Utility Attribute Selectors */
+
+[fx-row-start-start] { display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; }
+[fx-row-start-center] { display: flex; flex-direction: row; justify-content: flex-start; align-items: center; }
+[fx-row-start-end] { display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-end; }
+[fx-row-start-stretch] { display: flex; flex-direction: row; justify-content: flex-start; align-items: stretch; }
+
+[fx-row-center-start] { display: flex; flex-direction: row; justify-content: center; align-items: flex-start; }
+[fx-row-center-center] { display: flex; flex-direction: row; justify-content: center; align-items: center; }
+[fx-row-center-end] { display: flex; flex-direction: row; justify-content: center; align-items: flex-end; }
+[fx-row-center-stretch] { display: flex; flex-direction: row; justify-content: center; align-items: stretch; }
+
+[fx-row-end-start] { display: flex; flex-direction: row; justify-content: flex-end; align-items: flex-start; }
+[fx-row-end-center] { display: flex; flex-direction: row; justify-content: flex-end; align-items: center; }
+[fx-row-end-end] { display: flex; flex-direction: row; justify-content: flex-end; align-items: flex-end; }
+[fx-row-end-stretch] { display: flex; flex-direction: row; justify-content: flex-end; align-items: stretch; }
+
+[fx-row-between-start] { display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; }
+[fx-row-between-center] { display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+[fx-row-between-end] { display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; }
+[fx-row-between-stretch] { display: flex; flex-direction: row; justify-content: space-between; align-items: stretch; }
+
+[fx-row-around-start] { display: flex; flex-direction: row; justify-content: space-around; align-items: flex-start; }
+[fx-row-around-center] { display: flex; flex-direction: row; justify-content: space-around; align-items: center; }
+[fx-row-around-end] { display: flex; flex-direction: row; justify-content: space-around; align-items: flex-end; }
+[fx-row-around-stretch] { display: flex; flex-direction: row; justify-content: space-around; align-items: stretch; }
+
+/* Column direction */
+[fx-column-start-start] { display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; }
+[fx-column-start-center] { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; }
+[fx-column-start-end] { display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-end; }
+[fx-column-start-stretch] { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; }
+
+[fx-column-center-start] { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+[fx-column-center-center] { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+[fx-column-center-end] { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; }
+[fx-column-center-stretch] { display: flex; flex-direction: column; justify-content: center; align-items: stretch; }
+
+[fx-column-end-start] { display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; }
+[fx-column-end-center] { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+[fx-column-end-end] { display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; }
+[fx-column-end-stretch] { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; }
+
+[fx-column-between-start] { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; }
+[fx-column-between-center] { display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+[fx-column-between-end] { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; }
+[fx-column-between-stretch] { display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; }
+
+/* Helpers */
+[fx-flex] { flex: 1 1 0%; }
+[fx-flex-none] { flex: 0 0 auto; }
+[fx-wrap] { flex-wrap: wrap; }
+[fx-no-wrap] { flex-wrap: nowrap; }
+
+/* Gaps */
+[fx-gap-0] { gap: 0px; }
+[fx-gap-2] { gap: 2px; }
+[fx-gap-4] { gap: 4px; }
+[fx-gap-6] { gap: 6px; }
+[fx-gap-8] { gap: 8px; }
+[fx-gap-10] { gap: 10px; }
+[fx-gap-12] { gap: 12px; }
+[fx-gap-14] { gap: 14px; }
+[fx-gap-16] { gap: 16px; }
+[fx-gap-20] { gap: 20px; }
+[fx-gap-24] { gap: 24px; }
+[fx-gap-32] { gap: 32px; }
+
+/* 12-Column Grid Sizing */
+@for $i from 1 through 12 {
+  [fx-#{$i}] {
+    flex: 0 0 calc((100% / 12) * #{$i});
+    max-width: calc((100% / 12) * #{$i});
+    box-sizing: border-box;
+  }
+}
+
+/* Responsive Breakpoints */
+// sm: >= 768px
+@media (min-width: 768px) {
+  @for $i from 1 through 12 {
+    [fx-sm-#{$i}] {
+      flex: 0 0 calc((100% / 12) * #{$i});
+      max-width: calc((100% / 12) * #{$i});
+      box-sizing: border-box;
+    }
+  }
+  
+  [fx-row-sm-start-start] { display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-start; }
+  [fx-row-sm-start-center] { display: flex; flex-direction: row; justify-content: flex-start; align-items: center; }
+  [fx-row-sm-start-stretch] { display: flex; flex-direction: row; justify-content: flex-start; align-items: stretch; }
+  [fx-row-sm-between-center] { display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+  [fx-column-sm-start-stretch] { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; }
+}
+
+// md: >= 1280px
+@media (min-width: 1280px) {
+  @for $i from 1 through 12 {
+    [fx-md-#{$i}] {
+      flex: 0 0 calc((100% / 12) * #{$i});
+      max-width: calc((100% / 12) * #{$i});
+      box-sizing: border-box;
+    }
+  }
+}
+
+// lg: >= 1920px
+@media (min-width: 1920px) {
+  @for $i from 1 through 12 {
+    [fx-lg-#{$i}] {
+      flex: 0 0 calc((100% / 12) * #{$i});
+      max-width: calc((100% / 12) * #{$i});
+      box-sizing: border-box;
+    }
+  }
+}
