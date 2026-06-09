@@ -1,0 +1,36 @@
+/* Border Utility Classes & Attribute Selectors */
+
+.border-color {
+  border: 1px solid var(--ion-border-color);
+}
+
+// Color 1 Borders
+[ba-1] { border: 1px solid var(--border-color-1); }
+[bt-1] { border-top: 1px solid var(--border-color-1); }
+[br-1] { border-right: 1px solid var(--border-color-1); }
+[bb-1] { border-bottom: 1px solid var(--border-color-1); }
+[bl-1] { border-left: 1px solid var(--border-color-1); }
+
+[ba-2] { border: 2px solid var(--border-color-1); }
+[bt-2] { border-top: 2px solid var(--border-color-1); }
+[br-2] { border-right: 2px solid var(--border-color-1); }
+[bb-2] { border-bottom: 2px solid var(--border-color-1); }
+[bl-2] { border-left: 2px solid var(--border-color-1); }
+
+// Soft Borders (using --ion-border-color)
+[ba-1-soft] { border: 1px solid var(--ion-border-color); }
+[bt-1-soft] { border-top: 1px solid var(--ion-border-color); }
+[br-1-soft] { border-right: 1px solid var(--ion-border-color); }
+[bb-1-soft] { border-bottom: 1px solid var(--ion-border-color); }
+[bl-1-soft] { border-left: 1px solid var(--ion-border-color); }
+
+[ba-2-soft] { border: 2px solid var(--ion-border-color); }
+[bt-2-soft] { border-top: 2px solid var(--ion-border-color); }
+[br-2-soft] { border-right: 2px solid var(--ion-border-color); }
+[bb-2-soft] { border-bottom: 2px solid var(--ion-border-color); }
+[bl-2-soft] { border-left: 2px solid var(--ion-border-color); }
+
+// Border Radius
+[rounded-sm] {
+  border-radius: var(--border-radius);
+}
